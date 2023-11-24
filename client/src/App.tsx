@@ -1,5 +1,4 @@
 import React from "react"
-import "./App.css"
 import { ClerkProvider, SignedIn, SignedOut, UserButton, useUser, RedirectToSignIn } from "@clerk/clerk-react"
 
 if (!import.meta.env.VITE_CLERK_PUBLISHABLE_KEY) {
