@@ -1,5 +1,4 @@
-import React from "react"
-import { ClerkProvider, SignedIn, SignedOut, UserButton, useUser, RedirectToSignIn } from "@clerk/clerk-react"
+import { ClerkProvider, SignedIn, SignedOut, RedirectToSignIn } from "@clerk/clerk-react"
 
 if (!import.meta.env.VITE_CLERK_PUBLISHABLE_KEY) {
   throw "Missing Publishable Key"
