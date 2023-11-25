@@ -1,4 +1,5 @@
 import { ClerkProvider, SignedIn, SignedOut, RedirectToSignIn } from "@clerk/clerk-react"
+import Home from "./components/Home"
 
 if (!import.meta.env.VITE_CLERK_PUBLISHABLE_KEY) {
   throw "Missing Publishable Key"
@@ -10,17 +11,13 @@ function App() {
   return (
     <ClerkProvider publishableKey={clerkPubKey}>
       <SignedIn>
-        <Welcome />
+        <Home />
       </SignedIn>
       <SignedOut>
         <RedirectToSignIn />
       </SignedOut>
     </ClerkProvider>
   )
-}
-
-function Welcome() {
-  return <div>Hello you are signed in</div>
 }
 
 export default App
