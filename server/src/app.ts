@@ -10,11 +10,12 @@ import apiRoutes from "./routes/api"
 dotenv.config()
 
 const app = express()
+
 const port = process.env.PORT || 3000
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
 
-app.use(express.json())
 app.use(cors())
+app.use(express.json())
 app.use("/api", apiRoutes)
 
 app.use((req: Request, res: Response, next: NextFunction) => {
