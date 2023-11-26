@@ -26,10 +26,6 @@ app.use((err: Error, _req: Request, res: Response, next: NextFunction) => {
   res.status(401).send("Unauthenticated!")
 })
 
-app.get("/", (req, res) => {
-  res.send("Hello World!")
-})
-
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`)
 })
