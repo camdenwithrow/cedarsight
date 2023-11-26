@@ -1,5 +1,7 @@
 import { useState } from "react"
-export default function Error(props: { errorMessage: string }) {
+
+
+export default function Alert(props: { errorMessage: string }) {
   const [viewError, setViewError] = useState(false)
 
   const handleToggleViewError = (e: React.MouseEvent<HTMLButtonElement>) => {
