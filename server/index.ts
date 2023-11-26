@@ -22,7 +22,7 @@ app.use((err: Error, _req: Request, res: Response, next: NextFunction) => {
   res.status(401).send("Unauthenticated!")
 })
 
-app.get("/", (req, res) => {
+app.get("/api", (req, res) => {
   res.send("Hello World!")
 })
 
@@ -35,7 +35,7 @@ app.get("/", (req, res) => {
 // })
 
 // TODO: add auth
-app.post("/upload", upload.array("files"), async (req, res) => {
+app.post("/api/upload", upload.array("files"), async (req, res) => {
   let responses = []
   try {
     const files = req.files
@@ -55,7 +55,7 @@ app.post("/upload", upload.array("files"), async (req, res) => {
   }
 })
 
-app.get("/protected", ClerkExpressRequireAuth({}), (req, res) => {
+app.get("/api/protected", ClerkExpressRequireAuth({}), (req, res) => {
   res.send("Auth'd")
 })
 
