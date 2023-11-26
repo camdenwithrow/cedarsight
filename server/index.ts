@@ -41,12 +41,13 @@ app.post("/upload", upload.array("files"), async (req, res) => {
     const files = req.files
     if (!Array.isArray(files)) throw new Error("files not listed properly")
     for (const file of files) {
-      responses.push(file.filename)
+      responses.push(file.originalname)
       //   const aiResp = await openai.files.create({
       //     file: fs.createReadStream(file.buffer),
       //     purpose: "assistants",
       //   })
       //   responses.push(aiResp)
+      console.log(file.originalname)
     }
     res.send({ message: "Files uploaded successfully", openaiResps: responses })
   } catch (error) {
