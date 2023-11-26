@@ -22,7 +22,7 @@ app.use((err: Error, _req: Request, res: Response, next: NextFunction) => {
   res.status(401).send("Unauthenticated!")
 })
 
-app.get("/api", (req, res) => {
+app.get("/", (req, res) => {
   res.send("Hello World!")
 })
 

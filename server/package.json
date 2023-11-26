@@ -4,9 +4,9 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "start": "ts-node src/index.ts",
+    "start": "ts-node src/app.ts",
     "build": "rimraf dist && tsc",
-    "dev": "nodemon src/index.ts",
+    "dev": "nodemon src/app.ts",
     "vercel-build": "echo hello",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
