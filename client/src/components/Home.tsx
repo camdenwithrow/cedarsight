@@ -1,7 +1,7 @@
 import { useState } from "react"
 import FileDropzone from "./FileDropzone"
+import FileList from "./FileList"
 import Submitted from "./Submitted"
-import { Trash } from "../icons/Icons"
 import Alert from "./Alert"
 import { useUser } from "@clerk/clerk-react"
 
@@ -16,10 +16,6 @@ function Home() {
   const [submitted, setSubmitted] = useState(false)
   const [errorMessage, setErrorMessage] = useState("")
 
-  const handleClickDeleteFile = (e: React.MouseEvent<HTMLButtonElement>, deleteFile: File) => {
-    e.preventDefault()
-    setFiles((prev) => prev.filter((file) => file !== deleteFile))
-  }
 
   const handleClickEmailInput = (e: React.MouseEvent<HTMLInputElement>) => {
     const input = e.target as HTMLInputElement
@@ -79,19 +75,7 @@ function Home() {
             />
           </div>
           <FileDropzone files={files} setFiles={setFiles} />
-          <div className="mt-3">
-            {files &&
-              files.map((file) => (
-                <div key={file.name} className="flex items-center mb-2">
-                  <button onClick={(e) => handleClickDeleteFile(e, file)}>
-                    <Trash className="w-4 h-4" />
-                  </button>
-                  <p key={file.name} className="text-xs ml-3">
-                    {file.name}
-                  </p>
-                </div>
-              ))}
-          </div>
+          <FileList files={files} setFiles={setFiles}/>
           <button
             type="submit"
             className="w-full mt-6 px-5 py-2.5 me-2 mb-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm focus:outline-none"
