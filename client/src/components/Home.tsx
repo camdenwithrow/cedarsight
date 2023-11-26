@@ -37,7 +37,7 @@ function Home() {
     })
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/upload`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/uploads`, {
         method: "POST",
         body: formData,
       })
@@ -47,13 +47,13 @@ function Home() {
       }
       const result = await response.json()
       console.log(result)
+      setSubmitted(true)
     } catch (error) {
       console.log(error)
       setErrorMessage(error as string)
     } finally {
       console.log("submitted")
       setLoading(false)
-      setSubmitted(true)
     }
   }
 
