@@ -2,7 +2,7 @@ import { useState } from "react"
 import FileDropzone from "./FileDropzone"
 import Submitted from "./Submitted"
 import { Trash } from "../icons/Icons"
-import Error from "./Error"
+import Alert from "./Alert"
 import { useUser } from "@clerk/clerk-react"
 
 function Home() {
@@ -37,17 +37,16 @@ function Home() {
     })
 
     try {
-      console.log("LOADING")
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-      //   const response = await fetch("/api/files", {
-      //     method: "POST",
-      //     body: formData,
-      //   })
-      //   setLoading(true)
-      //   if (!response.ok) {
-      //     throw new Error(`Error ${response.statusText}`)
-      //   }
-      //   const result = await response.json()
+      const response = await fetch("http://localhost:3000/upload", {
+        method: "POST",
+        body: formData,
+      })
+      setLoading(true)
+      if (!response.ok) {
+        throw new Error(`Error ${response.statusText}`)
+      }
+      const result = await response.json()
+      console.log(result)
     } catch (error) {
       console.log(error)
       setErrorMessage(error as string)
@@ -63,7 +62,7 @@ function Home() {
       {loading || submitted ? (
         <Submitted loading={loading} />
       ) : (
-        <form className="w-full" onSubmit={handleSubmit}>
+        <form className="w-full" encType="multipart/form-data" onSubmit={handleSubmit}>
           <div className="mb-6">
             <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900">
               Email address (to send summary report)
@@ -99,7 +98,7 @@ function Home() {
           >
             Submit
           </button>
-          {errorMessage && <Error errorMessage={errorMessage} />}
+          {errorMessage && <Alert errorMessage={errorMessage} />}
         </form>
       )}
     </div>
