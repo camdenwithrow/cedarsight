@@ -46,6 +46,7 @@ function Home() {
         throw new Error(`Error ${response.statusText}`)
       }
       const result = await response.json()
+      console.log(result)
       setSubmitted(true)
     } catch (error) {
       console.log(error)
