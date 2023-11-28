@@ -37,7 +37,7 @@ function Home() {
     })
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/uploads`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/upload`, {
         method: "POST",
         body: formData,
       })
