@@ -42,6 +42,7 @@ async function verifyWithKey(key: string, req: VerifyRequest): Promise<boolean> 
     jti: string
     body: string
   }
+  console.log("jwtpayload", p)
   if (typeof req.url !== "undefined" && p.sub !== req.url) {
     throw new SignatureError(`invalid subject: ${p.sub}, want: ${req.url}`)
   }
@@ -58,12 +59,15 @@ export async function verify(req: VerifyRequest): Promise<boolean> {
   const currentSigningKey = process.env.QSTASH_CURRENT_SIGNING_KEY
   const nextSigningKey = process.env.QSTASH_NEXT_SIGNING_KEY
 
+  console.log("signing key", currentSigningKey, nextSigningKey)
+
   if (!currentSigningKey || !nextSigningKey) throw new Error("No signing key")
 
   const isValid = await verifyWithKey(currentSigningKey, req)
   if (isValid) {
     return true
   }
+  console.log("isValidCurrent", isValid)
   return verifyWithKey(nextSigningKey, req)
 }
 
@@ -71,6 +75,7 @@ export const verifyRequestMiddleware = async (req: Request, res: Response, next:
   try {
     // Extract the signature from the headers
     const signature = req.headers["upstash-signature"] as string
+    console.log("signature", signature)
 
     // If there's no signature or raw body, throw an error
     if (!signature || !req.body) {
@@ -86,6 +91,7 @@ export const verifyRequestMiddleware = async (req: Request, res: Response, next:
 
     // Perform verification
     const isValid = await verify(verifyReq)
+    console.log("isValid", isValid)
 
     if (isValid) {
       next() // Verification successful, proceed to the next middleware/route handler

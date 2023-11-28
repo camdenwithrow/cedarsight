@@ -19,7 +19,7 @@ router.get("/health", (req, res) => {
 })
 
 // TODO: add auth
-router.post("/upload", upload.array("files"), async (req: Request, res: Response) => {
+router.post("/upload", ClerkExpressRequireAuth, upload.array("files"), async (req: Request, res: Response) => {
   try {
     const files = req.files
     if (!Array.isArray(files) || files.length === 0){
