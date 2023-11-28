@@ -1,10 +1,6 @@
 import express, { NextFunction, Request, Response } from "express"
 import * as dotenv from "dotenv"
 import cors from "cors"
-import { ClerkExpressRequireAuth } from "@clerk/clerk-sdk-node"
-import OpenAI from "openai"
-import fs from "fs"
-import multer from "multer"
 import apiRoutes from "./routes/api"
 
 dotenv.config()

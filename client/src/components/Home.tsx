@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import FileDropzone from "./FileDropzone"
 import Submitted from "./Submitted"
 import { Trash } from "../icons/Icons"
@@ -9,6 +9,12 @@ function Home() {
   const { user } = useUser()
 
   const email = user?.primaryEmailAddress?.emailAddress
+
+  useEffect(() => {
+    const initialLoading = document.getElementById("loading-container")
+    initialLoading?.classList.remove("loading-container")
+    initialLoading?.classList.add("hidden")
+  }, [])
 
   const [files, setFiles] = useState<File[]>([])
   const [emailInput, setEmailInput] = useState<string>(email ? email : "")
@@ -50,7 +56,7 @@ function Home() {
       setSubmitted(true)
     } catch (error) {
       console.log(error)
-      setErrorMessage(error as string)
+      setErrorMessage((error as Error).message)
     } finally {
       console.log("submitted")
       setLoading(false)
