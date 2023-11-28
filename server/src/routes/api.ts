@@ -30,8 +30,8 @@ router.post("/upload", upload.array("files"), async (req: Request, res: Response
       const blob = new Blob([file.buffer], { type: file.mimetype })
       console.log("blob", blob)
       const uploadable = new File([blob], file.originalname, {
-        type: file.mimetype,
-        lastModified: new Date().getTime(),
+        // type: file.mimetype,
+        // lastModified: new Date().getTime(),
       })
       console.log("uploadable", uploadable)
       const aiResp = await openai.files.create({
