@@ -6,6 +6,7 @@ import OpenAI from "openai"
 import * as dotenv from "dotenv"
 import { Client as upClient } from "@upstash/qstash"
 import { verifyRequestMiddleware } from "../middleware/middleware"
+import sendEmail from "../utils/sendEmail"
 
 dotenv.config()
 const router = Router()
@@ -19,7 +20,7 @@ router.get("/health", (req, res) => {
 })
 
 // TODO: add auth
-router.post("/upload", ClerkExpressRequireAuth, upload.array("files"), async (req: Request, res: Response) => {
+router.post("/upload", ClerkExpressRequireAuth({}), upload.array("files"), async (req: Request, res: Response) => {
   try {
     const files = req.files
     if (!Array.isArray(files) || files.length === 0){
@@ -97,6 +98,10 @@ router.post("/summarize", verifyRequestMiddleware, async (req: Request, res: Res
   } catch (error) {
     res.status(500).send({ message: "Error runing assisstant thread:", error: error })
   }
+})
+
+router.post("/email", (req: Request, res: Response) => {
+  sendEmail(req.body.email, `Your Equity Summary for: ${req.body.fileName}`, "summary")
 })
 
 router.get("/protected", ClerkExpressRequireAuth, (req: Request, res: Response) => {
