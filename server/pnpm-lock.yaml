@@ -8,15 +8,24 @@ dependencies:
   '@clerk/clerk-sdk-node':
     specifier: ^4.12.22
     version: 4.12.22(react@18.2.0)
+  '@upstash/qstash':
+    specifier: ^2.3.0
+    version: 2.3.0
   cors:
     specifier: ^2.8.5
     version: 2.8.5
+  crypto-js:
+    specifier: ^4.2.0
+    version: 4.2.0
   dotenv:
     specifier: ^16.3.1
     version: 16.3.1
   express:
     specifier: ^4.18.2
     version: 4.18.2
+  jose:
+    specifier: ^5.1.1
+    version: 5.1.1
   multer:
     specifier: 1.4.5-lts.1
     version: 1.4.5-lts.1
@@ -28,6 +37,9 @@ devDependencies:
   '@types/cors':
     specifier: ^2.8.17
     version: 2.8.17
+  '@types/crypto-js':
+    specifier: ^4.2.1
+    version: 4.2.1
   '@types/express':
     specifier: ^4.17.21
     version: 4.17.21
@@ -217,6 +229,10 @@ packages:
       '@types/node': 20.10.0
     dev: true
 
+  /@types/crypto-js@4.2.1:
+    resolution: {integrity: sha512-FSPGd9+OcSok3RsM0UZ/9fcvMOXJ1ENE/ZbLfOPlBWj7BgXtEAM8VYfTtT760GiLbQIMoVozwVuisjvsVwqYWw==}
+    dev: true
+
   /@types/express-serve-static-core@4.17.41:
     resolution: {integrity: sha512-OaJ7XLaelTgrvlZD8/aa0vvvxZdUmlCn6MtWeB7TkiKW70BQLc9XEPpDLPdbo52ZhXUCrznlWdCHWxJWtdyajA==}
     dependencies:
@@ -308,6 +324,13 @@ packages:
       '@types/http-errors': 2.0.4
       '@types/mime': 3.0.4
       '@types/node': 20.10.0
+
+  /@upstash/qstash@2.3.0:
+    resolution: {integrity: sha512-p4L1n5/OWk8UUJJ6S5iInx+1YXm1LseTXthuFhJ7dY08NSKkGGJqipjH4/2jTxxhXMiXARRng+SQyF71NTnnBA==}
+    dependencies:
+      crypto-js: 4.2.0
+      jose: 4.15.4
+    dev: false
 
   /abbrev@1.1.1:
     resolution: {integrity: sha512-nne9/IiQ/hzIhY6pdDnbBtz7DjPTKrY00P/zvPSm5pOFkl6xuGrGnXn/VtTNNfNtAfZ9/1RtehkszU9qcTii0Q==}
@@ -591,6 +614,10 @@ packages:
 
   /crypt@0.0.2:
     resolution: {integrity: sha512-mCxBlsHFYh9C+HVpiEacem8FEBnMXgU9gy4zmNC+SXAZNB/1idgp/aulFJ4FgCi7GPEVbfyng092GqL2k2rmow==}
+    dev: false
+
+  /crypto-js@4.2.0:
+    resolution: {integrity: sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==}
     dev: false
 
   /csstype@3.1.1:
@@ -981,6 +1008,14 @@ packages:
     optionalDependencies:
       '@pkgjs/parseargs': 0.11.0
     dev: true
+
+  /jose@4.15.4:
+    resolution: {integrity: sha512-W+oqK4H+r5sITxfxpSU+MMdr/YSWGvgZMQDIsNoBDGGy4i7GBPTtvFKibQzW06n3U3TqHjhvBJsirShsEJ6eeQ==}
+    dev: false
+
+  /jose@5.1.1:
+    resolution: {integrity: sha512-bfB+lNxowY49LfrBO0ITUn93JbUhxUN8I11K6oI5hJu/G6PO6fEUddVLjqdD0cQ9SXIHWXuWh7eJYwZF7Z0N/g==}
+    dev: false
 
   /js-cookie@3.0.1:
     resolution: {integrity: sha512-+0rgsUXZu4ncpPxRL+lNEptWMOWl9etvPHc/koSRp6MPwpRYAhmk0dUG00J4bxVV3r9uUzfo24wW0knS07SKSw==}
