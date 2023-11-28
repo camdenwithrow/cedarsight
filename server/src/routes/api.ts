@@ -23,8 +23,10 @@ router.post("/upload", ClerkExpressRequireAuth, upload.array("files"), async (re
   try {
     const files = req.files
     if (!Array.isArray(files)) throw new Error("files not listed properly")
+    console.log("files length", files.length)
     for (let i = 0; i < files.length; i++) {
       const file = files[i]
+      console.log("filename", file.originalname)
       const blob = new Blob([file.buffer], { type: file.mimetype })
       const uploadable = new File([blob], file.originalname, {
         type: file.mimetype,
@@ -34,11 +36,13 @@ router.post("/upload", ClerkExpressRequireAuth, upload.array("files"), async (re
         file: uploadable,
         purpose: "assistants",
       })
+      console.log("aiResponse", file.originalname, aiResp)
       const upResp = await upstash.publishJSON({
         url: `${process.env.THIS_API_URL}/summarize`,
         delay: i,
         body: { fileId: aiResp.id },
       })
+      console.log("upResponse", file.originalname, upResp)
       responses.push({ openAi: aiResp, upstash: upResp })
     }
     res.send({ message: "Files uploaded successfully", openaiResps: responses })
