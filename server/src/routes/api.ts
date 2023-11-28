@@ -55,7 +55,7 @@ router.post("summarize", verifyRequestMiddleware, async (req: Request, res: Resp
         },
       ],
     })
-    const run = await openai.beta.threads.runs.create(thread.id, { assistant_id: process.env.AssisstantId! })
+    const run = await openai.beta.threads.runs.create(thread.id, { assistant_id: process.env.ASSISSTANT_ID! })
   } catch (error) {
     res.status(500).send({ message: "Error runing assisstant thread:", error: error })
   }
