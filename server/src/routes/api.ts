@@ -63,7 +63,7 @@ router.post("/upload", upload.array("files"), async (req: Request, res: Response
   }
 })
 
-router.post("summarize", verifyRequestMiddleware, async (req: Request, res: Response) => {
+router.post("/summarize", verifyRequestMiddleware, async (req: Request, res: Response) => {
   try {
     const fileId: string = req.body.fileId
     const msgContent =
