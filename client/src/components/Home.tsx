@@ -3,9 +3,10 @@ import FileDropzone from "./FileDropzone"
 import Submitted from "./Submitted"
 import { Trash } from "../icons/Icons"
 import Alert from "./Alert"
-import { useUser } from "@clerk/clerk-react"
+import { useAuth, useUser } from "@clerk/clerk-react"
 
 function Home() {
+  const { getToken } = useAuth()
   const { user } = useUser()
 
   const email = user?.primaryEmailAddress?.emailAddress
@@ -45,6 +46,7 @@ function Home() {
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/upload`, {
         method: "POST",
+        headers: { Authorization: `Bearer ${await getToken()}`},
         body: formData,
       })
       setLoading(true)
