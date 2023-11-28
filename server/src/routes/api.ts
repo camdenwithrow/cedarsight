@@ -34,7 +34,11 @@ router.post("/upload", ClerkExpressRequireAuth, upload.array("files"), async (re
         file: uploadable,
         purpose: "assistants",
       })
-      const upResp = await upstash.publishJSON({ url: `${process.env.THIS_API_URL}/summarize`, delay: i, body: {fileId: aiResp.id} })
+      const upResp = await upstash.publishJSON({
+        url: `${process.env.THIS_API_URL}/summarize`,
+        delay: i,
+        body: { fileId: aiResp.id },
+      })
       responses.push({ openAi: aiResp, upstash: upResp })
     }
     res.send({ message: "Files uploaded successfully", openaiResps: responses })
@@ -46,11 +50,27 @@ router.post("/upload", ClerkExpressRequireAuth, upload.array("files"), async (re
 router.post("summarize", verifyRequestMiddleware, async (req: Request, res: Response) => {
   try {
     const fileId: string = req.body.fileId
+    const msgContent = req.body.prompt ?? `
+      Please summarize this earnings report in around 750 words, include all important financial data points such as:
+      Revenue: growth, absolute and growth and absolute by segment
+      Gross Profits: growth, absolute
+      Gross Margin: growth, absolute
+      OpEx: growth, absolute, R&D: growth, absolute, SG&A: growth, absolute
+      Other Expenses,
+      Inventories: growth, absolute,
+      EBIT: growth, absolute, and growth, absolute by segment
+      EBT: growth, absolute, and growth, absolute by segment
+      Net: growth, absolute
+      EPS: growth, absolute
+      FCF: growth, absolute,
+      Next quarter guidence including by segment
+      Any other import financial data point you feel is necessary to include
+    `
     const thread = await openai.beta.threads.create({
       messages: [
         {
           role: "user",
-          content: "",
+          content: msgContent,
           file_ids: [fileId],
         },
       ],
