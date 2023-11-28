@@ -99,8 +99,10 @@ router.post("/summarize", async (req: Request, res: Response) => {
   }
 })
 
-router.post("/email", (req: Request, res: Response) => {
-  sendEmail(req.body.email, `Your Equity Summary for: ${req.body.fileName}`, "summary")
+router.post("/email", async (req: Request, res: Response) => {
+  const result = await sendEmail(req.body.email, `Your Equity Summary for: ${req.body.fileName}`, "summary")
+  if (result.error) res.status(500).send(result.error)
+  res.send({ message: "success" })
 })
 
 export default router
