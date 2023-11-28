@@ -28,10 +28,12 @@ router.post("/upload", upload.array("files"), async (req: Request, res: Response
       const file = files[i]
       console.log("filename", file.originalname)
       const blob = new Blob([file.buffer], { type: file.mimetype })
+      console.log("blob", blob)
       const uploadable = new File([blob], file.originalname, {
         type: file.mimetype,
         lastModified: new Date().getTime(),
       })
+      console.log("uploadable", uploadable)
       const aiResp = await openai.files.create({
         file: uploadable,
         purpose: "assistants",
