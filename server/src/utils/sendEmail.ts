@@ -16,8 +16,8 @@ export default async function sendEmail(to: string, subject: string, text: strin
     console.log("Email sent successfully")
   } catch (error) {
     console.error("Error sending email:", error)
-    if (error.response) {
-      console.error(error.response.body)
+    if (error) {
+      console.error(error)
     }
   }
 }
