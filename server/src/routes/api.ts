@@ -11,7 +11,7 @@ const router = Router()
 const storage = multer.memoryStorage()
 const upload = multer({ storage: storage })
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
-const upstash = new upClient({ token: process.env.QSTASH_API_TOKEN ?? "" })
+const upstash = new upClient({ token: process.env.QSTASH_API_TOKEN! })
 
 router.get("/health", (req, res) => {
   res.send("Success")
@@ -34,7 +34,7 @@ router.post("/upload", ClerkExpressRequireAuth, upload.array("files"), async (re
         file: uploadable,
         purpose: "assistants",
       })
-      const upResp = await upstash.publishJSON({ url: `${process.env.THIS_API_URL}/summarize`, delay: i, body: aiResp })
+      const upResp = await upstash.publishJSON({ url: `${process.env.THIS_API_URL}/summarize`, delay: i, body: {fileId: aiResp.id} })
       responses.push({ openAi: aiResp, upstash: upResp })
     }
     res.send({ message: "Files uploaded successfully", openaiResps: responses })
@@ -43,8 +43,22 @@ router.post("/upload", ClerkExpressRequireAuth, upload.array("files"), async (re
   }
 })
 
-router.post("summarize", verifyRequestMiddleware, (req: Request, res: Response) => {
-  
+router.post("summarize", verifyRequestMiddleware, async (req: Request, res: Response) => {
+  try {
+    const fileId: string = req.body.fileId
+    const thread = await openai.beta.threads.create({
+      messages: [
+        {
+          role: "user",
+          content: "",
+          file_ids: [fileId],
+        },
+      ],
+    })
+    const run = await openai.beta.threads.runs.create(thread.id, { assistant_id: process.env.AssisstantId! })
+  } catch (error) {
+    res.status(500).send({ message: "Error runing assisstant thread:", error: error })
+  }
 })
 
 router.get("/protected", ClerkExpressRequireAuth, (req: Request, res: Response) => {
