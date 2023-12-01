@@ -113,15 +113,22 @@ router.post("/summarize", async (req: Request, res: Response) => {
 })
 
 router.post("/email", async (req: Request, res: Response) => {
-  const { threadId, runId } = req.body
-  const run = await openai.beta.threads.runs.retrieve(threadId, runId)
-  if (run.status !== "completed") {
-    res.status(500).send({ message: "not completed" })
-  } else {
-    const messageResp = await openai.beta.threads.messages.list(threadId)
-    const message = messageResp.data.join("\n\n")
-    const result = await sendEmail(req.body.email, `Your Equity Summary for: ${req.body.fileName}`, message)
-    res.send(result)
+  try {
+    const { threadId, runId } = req.body
+    const run = await openai.beta.threads.runs.retrieve(threadId, runId)
+    console.log(run)
+    if (run.status !== "completed") {
+      res.status(500).send({ message: "not completed" })
+    } else {
+      const messageResp = await openai.beta.threads.messages.list(threadId)
+      console.log(messageResp)
+      const message = messageResp.data.join("\n\n")
+      console.log(message)
+      const result = await sendEmail(req.body.email, `Your Equity Summary for: ${req.body.fileName}`, message)
+      res.send(result)
+    }
+  } catch (error) {
+    res.status(500).send({ error: error })
   }
 })
 
