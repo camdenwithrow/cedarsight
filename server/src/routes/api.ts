@@ -24,6 +24,7 @@ router.get("/health", (req, res) => {
 router.post("/upload", upload.array("files"), async (req: Request, res: Response) => {
   try {
     const files = req.files
+
     if (!Array.isArray(files) || files.length === 0) {
       return res.status(400).send({ message: "No files uploaded or files not listed properly" })
     }
@@ -52,7 +53,7 @@ router.post("/upload", upload.array("files"), async (req: Request, res: Response
       const upResp = await upstash.publishJSON({
         url: `${process.env.THIS_API_URL}/summarize`,
         delay: i,
-        body: { fileId: aiResp.id },
+        body: { email: req.body.email, file: { fileName: file.originalname, fileId: aiResp.id } },
       })
       console.log("upResponse", file.originalname, upResp)
 
@@ -95,14 +96,28 @@ router.post("/summarize", async (req: Request, res: Response) => {
       ],
     })
     const run = await openai.beta.threads.runs.create(thread.id, { assistant_id: process.env.ASSISSTANT_ID! })
+    const upResp = await upstash.publishJSON({
+      url: `${process.env.THIS_API_URL}/email`,
+      delay: 120,
+      body: { email: req.body.email, fileName: req.body.fileName },
+    })
+    res.send({ runResp: run, upResp: upResp })
   } catch (error) {
     res.status(500).send({ message: "Error runing assisstant thread:", error: error })
   }
 })
 
 router.post("/email", async (req: Request, res: Response) => {
-  const result = await sendEmail(req.body.email, `Your Equity Summary for: ${req.body.fileName}`, "summary")
-  res.send(result)
+  const { threadId, runId } = req.body
+  const run = await openai.beta.threads.runs.retrieve(threadId, runId)
+  if (run.status !== "completed") {
+    res.status(500).send({ message: "not completed" })
+  } else {
+    const messageResp = await openai.beta.threads.messages.list(threadId)
+    const message = messageResp.data.join('\n\n')
+    const result = await sendEmail(req.body.email, `Your Equity Summary for: ${req.body.fileName}`, message)
+    res.send(result)
+  }
 })
 
 export default router
