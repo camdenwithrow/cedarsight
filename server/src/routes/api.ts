@@ -102,7 +102,8 @@ router.post("/summarize", async (req: Request, res: Response) => {
     console.log("runResp:", run)
     const upResp = await upstash.publishJSON({
       url: `${process.env.THIS_API_URL}/email`,
-      delay: 120,
+      delay: 180,
+      retries: 0,
       body: { threadId: thread.id, runId: run.id, email: req.body.email, fileName: req.body.file.name },
     })
     console.log("upResp:", upResp)
@@ -118,11 +119,20 @@ router.post("/email", async (req: Request, res: Response) => {
     const run = await openai.beta.threads.runs.retrieve(threadId, runId)
     console.log(run)
     if (run.status !== "completed") {
-      res.status(500).send({ message: "not completed" })
+      if (run.status === "in_progress" || run.status === "queued") {
+        const upResp = await upstash.publishJSON({
+          url: `${process.env.THIS_API_URL}/email`,
+          delay: 60,
+          retries: 0,
+          body: { threadId: threadId, runId: runId, email: req.body.email, fileName: req.body.file.name },
+        })
+      } else {
+        res.status(500).send({ message: "not completed" })
+      }
     } else {
       const messageResp = await openai.beta.threads.messages.list(threadId)
       console.log(messageResp)
-      const message = messageResp.data.join("\n\n")
+      const message = messageResp.data.map((msg) => msg.content.join("\n")).join("\n\n------------------------\n\n")
       console.log(message)
       const result = await sendEmail(req.body.email, `Your Equity Summary for: ${req.body.fileName}`, message)
       res.send(result)
