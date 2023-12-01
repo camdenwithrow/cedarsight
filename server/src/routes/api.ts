@@ -53,7 +53,7 @@ router.post("/upload", upload.array("files"), async (req: Request, res: Response
       const upResp = await upstash.publishJSON({
         url: `${process.env.THIS_API_URL}/summarize`,
         delay: i,
-        body: { email: req.body.email, file: { fileName: file.originalname, fileId: aiResp.id } },
+        body: { email: req.body.email, file: { name: file.originalname, id: aiResp.id } },
       })
       console.log("upResponse", file.originalname, upResp)
 
@@ -69,7 +69,7 @@ router.post("/summarize", async (req: Request, res: Response) => {
   console.log(req.body, "SHOUD BE: fileId, email, fileName")
   try {
     let resps = []
-    const fileId: string = req.body.fileId
+    const fileId: string = req.body.file.id
     const msgContent =
       req.body.prompt ??
       `
@@ -103,7 +103,7 @@ router.post("/summarize", async (req: Request, res: Response) => {
     const upResp = await upstash.publishJSON({
       url: `${process.env.THIS_API_URL}/email`,
       delay: 120,
-      body: { email: req.body.email, fileName: req.body.fileName },
+      body: { email: req.body.email, fileName: req.body.file.name },
     })
     console.log("upResp:", upResp)
     res.send({ threadResp: thread, runResp: run, upResp: upResp })
