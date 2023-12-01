@@ -135,7 +135,7 @@ router.post("/email", async (req: Request, res: Response) => {
       const msgObjs = threadResp.data.flatMap((msgObj) => msgObj.content || [])
       let emailMsg = msgObjs.reduce((acc, val) => {
         if (val.type === "text" && val.text) {
-          return `${acc}\n${val.text}`
+          return `${acc}\n${val.text.value}`
         }
         return acc
       }, "")
