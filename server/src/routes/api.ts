@@ -66,7 +66,9 @@ router.post("/upload", upload.array("files"), async (req: Request, res: Response
 })
 
 router.post("/summarize", async (req: Request, res: Response) => {
+  console.log(req.body, "SHOUD BE: fileId, email, fileName")
   try {
+    let resps = []
     const fileId: string = req.body.fileId
     const msgContent =
       req.body.prompt ??
@@ -95,13 +97,16 @@ router.post("/summarize", async (req: Request, res: Response) => {
         },
       ],
     })
+    console.log("threadResp:", thread)
     const run = await openai.beta.threads.runs.create(thread.id, { assistant_id: process.env.ASSISSTANT_ID! })
+    console.log("runResp:", run)
     const upResp = await upstash.publishJSON({
       url: `${process.env.THIS_API_URL}/email`,
       delay: 120,
       body: { email: req.body.email, fileName: req.body.fileName },
     })
-    res.send({ runResp: run, upResp: upResp })
+    console.log("upResp:", upResp)
+    res.send({ threadResp: thread, runResp: run, upResp: upResp })
   } catch (error) {
     res.status(500).send({ message: "Error runing assisstant thread:", error: error })
   }
@@ -114,7 +119,7 @@ router.post("/email", async (req: Request, res: Response) => {
     res.status(500).send({ message: "not completed" })
   } else {
     const messageResp = await openai.beta.threads.messages.list(threadId)
-    const message = messageResp.data.join('\n\n')
+    const message = messageResp.data.join("\n\n")
     const result = await sendEmail(req.body.email, `Your Equity Summary for: ${req.body.fileName}`, message)
     res.send(result)
   }
