@@ -103,7 +103,7 @@ router.post("/summarize", async (req: Request, res: Response) => {
     const upResp = await upstash.publishJSON({
       url: `${process.env.THIS_API_URL}/email`,
       delay: 120,
-      body: { email: req.body.email, fileName: req.body.file.name },
+      body: { threadId: thread.id, runId: run.id, email: req.body.email, fileName: req.body.file.name },
     })
     console.log("upResp:", upResp)
     res.send({ threadResp: thread, runResp: run, upResp: upResp })
