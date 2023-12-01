@@ -126,6 +126,7 @@ router.post("/email", async (req: Request, res: Response) => {
           retries: 0,
           body: { threadId: threadId, runId: runId, email: req.body.email, fileName: req.body.file.name },
         })
+        res.send(upResp)
       } else {
         res.status(500).send({ message: "not completed" })
       }
