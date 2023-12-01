@@ -6,7 +6,7 @@ export default async function sendEmail(to: string, subject: string, text: strin
 
   const msg = {
     to, // recipient
-    from: "your-gmail-email@gmail.com", // your Gmail address registered with SendGrid
+    from: "withrowcamden@gmail.com", // your Gmail address registered with SendGrid
     subject,
     text,
     html,
