@@ -7,6 +7,7 @@ import * as dotenv from "dotenv"
 import { Client as upClient } from "@upstash/qstash"
 import { verifyRequestMiddleware } from "../middleware/middleware"
 import sendEmail from "../utils/sendEmail"
+import nodemailer from "nodemailer"
 
 dotenv.config()
 const router = Router()
@@ -101,8 +102,7 @@ router.post("/summarize", async (req: Request, res: Response) => {
 
 router.post("/email", async (req: Request, res: Response) => {
   const result = await sendEmail(req.body.email, `Your Equity Summary for: ${req.body.fileName}`, "summary")
-  if (result.error) res.status(500).send(result.error)
-  res.send({ message: "success" })
+  res.send(result)
 })
 
 export default router
