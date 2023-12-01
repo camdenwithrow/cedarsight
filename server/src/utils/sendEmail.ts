@@ -13,8 +13,8 @@ export default async function sendEmail(to: string, subject: string, text: strin
   }
 
   try {
-    await sgMail.send(msg)
-    return { message: "success" }
+    const resp = await sgMail.send(msg)
+    return { ...resp }
   } catch (error) {
     return { error: error }
   }
