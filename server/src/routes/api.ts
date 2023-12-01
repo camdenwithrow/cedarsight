@@ -117,7 +117,6 @@ router.post("/email", async (req: Request, res: Response) => {
   try {
     const { threadId, runId } = req.body
     const run = await openai.beta.threads.runs.retrieve(threadId, runId)
-    console.log(run)
     if (run.status !== "completed") {
       if (run.status === "in_progress" || run.status === "queued") {
         const upResp = await upstash.publishJSON({
@@ -131,11 +130,17 @@ router.post("/email", async (req: Request, res: Response) => {
         res.status(500).send({ message: "not completed" })
       }
     } else {
-      const messageResp = await openai.beta.threads.messages.list(threadId)
-      console.log(messageResp)
-      const message = messageResp.data.map((msg) => msg.content.join("\n")).join("\n\n------------------------\n\n")
-      console.log(message)
-      const result = await sendEmail(req.body.email, `Your Equity Summary for: ${req.body.fileName}`, message)
+      const threadResp = await openai.beta.threads.messages.list(threadId)
+      console.log("threadResp", threadResp)
+      const msgObjs = threadResp.data.flatMap((msgObj) => msgObj.content || [])
+      let emailMsg = msgObjs.reduce((acc, val) => {
+        if (val.type === "text" && val.text) {
+          return `${acc}\n${val.text}`
+        }
+        return acc
+      }, "")
+      console.log(emailMsg)
+      const result = await sendEmail(req.body.email, `Your Equity Summary for: ${req.body.fileName}`, emailMsg)
       res.send(result)
     }
   } catch (error) {
