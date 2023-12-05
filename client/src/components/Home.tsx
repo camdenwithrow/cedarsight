@@ -44,7 +44,7 @@ function Home() {
     })
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/upload`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/upload/chat`, {
         method: "POST",
         headers: { Authorization: `Bearer ${await getToken()}`},
         body: formData,
