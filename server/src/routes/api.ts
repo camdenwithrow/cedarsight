@@ -82,15 +82,11 @@ router.post("/summarize/chat", async (req: Request, res: Response) => {
 })
 
 router.post("/email/chat", async (req: Request, res: Response) => {
-  try {
-    const { email, fileName, msgResp } = req.body
+  const { email, fileName, msgResp } = req.body
 
-    const emailMsg = (msgResp as OpenAI.ChatCompletion).choices.map((choice) => choice.message.content).join("\n")
-    const result = await sendEmail(email, `Your Equity Summary for: ${fileName}`, emailMsg)
-    res.send(result)
-  } catch (error) {
-    res.status(500).send({ error: error })
-  }
+  const emailMsg = (msgResp as OpenAI.ChatCompletion).choices.map((choice) => choice.message.content).join("\n")
+  const result = await sendEmail(email, `Your Equity Summary for: ${fileName}`, emailMsg)
+  res.send(result)
 })
 
 // TODO: add auth
