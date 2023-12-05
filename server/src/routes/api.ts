@@ -67,7 +67,7 @@ router.post("/summarize/chat", async (req: Request, res: Response) => {
       ${req.body.file.text}
     `
   const msgResp = await openai.chat.completions.create({
-    model: "gpt-3.5-turbo",
+    model: "gpt-3.5-turbo-1106",
     messages: [{ role: "user", content: msgContent }],
   })
   console.log("openaiResp", msgResp)
