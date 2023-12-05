@@ -47,8 +47,7 @@ router.post("/upload/chat", upload.array("files"), async (req: Request, res: Res
 })
 
 router.post("/summarize/chat", async (req: Request, res: Response) => {
-  try {
-    const msgContent = `
+  const msgContent = `
       Please summarize this earnings report in around 750 words, include all important financial data points such as:
       Revenue: growth, absolute and growth and absolute by segment
       Gross Profits: growth, absolute
@@ -67,32 +66,28 @@ router.post("/summarize/chat", async (req: Request, res: Response) => {
       Earnings Report:
       ${req.body.file.text}
     `
-    const msgResp = await openai.chat.completions.create({
-      model: "gpt-4-32k",
-      messages: [{ role: "user", content: msgContent }],
-    })
-    console.log("openaiResp", msgResp)
+  const msgResp = await openai.chat.completions.create({
+    model: "gpt-4-32k",
+    messages: [{ role: "user", content: msgContent }],
+  })
+  console.log("openaiResp", msgResp)
 
-    const upResp = await upstash.publishJSON({
-      url: `${process.env.THIS_API_URL}/email/chat`,
-      body: { email: req.body.email, fileName: req.body.file.name , msg: msgResp },
-    })
-    console.log("upResp", upResp)
+  const upResp = await upstash.publishJSON({
+    url: `${process.env.THIS_API_URL}/email/chat`,
+    body: { email: req.body.email, fileName: req.body.file.name, msg: msgResp },
+  })
+  console.log("upResp", upResp)
 
-    res.send({ msgResp: msgResp, upResp: upResp, message: "success", })
-  } catch (error) {
-    res.status(500).send({ error: error })
-  }
+  res.send({ msgResp: msgResp, upResp: upResp, message: "success" })
 })
 
 router.post("/email/chat", async (req: Request, res: Response) => {
   try {
     const { email, fileName, msgResp } = req.body
 
-      const emailMsg = (msgResp as OpenAI.ChatCompletion).choices.map((choice) => choice.message.content).join("\n")
-      const result = await sendEmail(email, `Your Equity Summary for: ${fileName}`, emailMsg)
-      res.send(result)
-
+    const emailMsg = (msgResp as OpenAI.ChatCompletion).choices.map((choice) => choice.message.content).join("\n")
+    const result = await sendEmail(email, `Your Equity Summary for: ${fileName}`, emailMsg)
+    res.send(result)
   } catch (error) {
     res.status(500).send({ error: error })
   }
