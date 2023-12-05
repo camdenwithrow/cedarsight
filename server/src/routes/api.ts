@@ -82,9 +82,9 @@ router.post("/summarize/chat", async (req: Request, res: Response) => {
 })
 
 router.post("/email/chat", async (req: Request, res: Response) => {
-  const { email, fileName, msgResp } = req.body
+  const { email, fileName, msg } = req.body
 
-  const emailMsg = (msgResp as OpenAI.ChatCompletion).choices.map((choice) => choice.message.content).join("\n")
+  const emailMsg = (msg as OpenAI.ChatCompletion).choices.map((choice) => choice.message.content).join("\n")
   const result = await sendEmail(email, `Your Equity Summary for: ${fileName}`, emailMsg)
   res.send(result)
 })
