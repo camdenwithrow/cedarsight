@@ -81,7 +81,7 @@ router.post("/summarize/chat", async (req: Request, res: Response) => {
 
     res.send({ msgResp: msgResp, upResp: upResp, message: "success", })
   } catch (error) {
-    res.send(500).send({ error: error })
+    res.status(500).send({ error: error })
   }
 })
 
