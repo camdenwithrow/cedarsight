@@ -48,7 +48,6 @@ router.post("/upload/chat", upload.array("files"), async (req: Request, res: Res
 
 router.post("/summarize/chat", async (req: Request, res: Response) => {
   try {
-    console.log("file", req.body.file.text)
     const msgContent = `
       Please summarize this earnings report in around 750 words, include all important financial data points such as:
       Revenue: growth, absolute and growth and absolute by segment
