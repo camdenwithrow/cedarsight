@@ -48,6 +48,7 @@ router.post("/upload/chat", upload.array("files"), async (req: Request, res: Res
 
 router.post("/summarize/chat", async (req: Request, res: Response) => {
   try {
+    console.log("file", req.body.file.text)
     const msgContent = `
       Please summarize this earnings report in around 750 words, include all important financial data points such as:
       Revenue: growth, absolute and growth and absolute by segment
@@ -71,13 +72,13 @@ router.post("/summarize/chat", async (req: Request, res: Response) => {
       model: "gpt-4-32k",
       messages: [{ role: "user", content: msgContent }],
     })
+    console.log("openaiResp", msgResp)
 
     const upResp = await upstash.publishJSON({
       url: `${process.env.THIS_API_URL}/email/chat`,
       body: { email: req.body.email, fileName: req.body.file.name , msg: msgResp },
     })
-
-    const msg = msgResp.choices[0].message.content
+    console.log("upResp", upResp)
 
     res.send({ msgResp: msgResp, upResp: upResp, message: "success", })
   } catch (error) {
